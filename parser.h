@@ -3,4 +3,6 @@
 
 char* Parser_Next(int argc, char* argv[]);
 
+int Parser_NextArgs(int* argc, char** argv[]);
+
 #endif  // PARSER_H_

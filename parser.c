@@ -20,17 +20,42 @@ int SubcommandList_Contains(char const* name)
 
 char* Parser_Next(int argc, char* argv[])
 {
-  static int i, init = 0;
-  CR_BEGIN;
-  for (i = 1; i < argc; ++i) {
-    if (argv[i][0] != '-' && init == 0) {
-      init = 1;
-      CR_RETURN(argv[i]);
-    } else {
-      if (SubcommandList_Contains(argv[i]))
-	CR_RETURN(argv[i]);
-    }
+  static int i, state = 0;
+
+  switch(state) {
+  case 0: goto parser_first_run;
+  case 1: goto parser_resume_from_yield;
+  default:
+    return NULL;
   }
-  CR_RETURN(NULL);
-  CR_FINISH;
+
+ parser_first_run:
+  for (i = 1; i < argc; ++i) {
+    if (argv[i][0] != '-' && state == 0) {
+      state = 1;
+      return argv[i];
+    } else if (SubcommandList_Contains(argv[i])) {
+      return argv[i];
+    }
+    parser_resume_from_yield:;
+  }
+  state = -1;
+  return NULL;
+}
+
+int Parser_NextArgs(int* argc, char** argv[])
+{
+/*   static int i, init = 0; */
+/*   CR_BEGIN; */
+/*   for (i = 1; i < argc; ++i) { */
+/*     if (argv[i][0] != '-' && init == 0) { */
+/*       init = 1; */
+/*       CR_RETURN(argv[i]); */
+/*     } else { */
+/*       if (SubcommandList_Contains(argv[i])) */
+/* 	CR_RETURN(argv[i]); */
+/*     } */
+/*   } */
+/*   CR_RETURN(NULL); */
+/*   CR_FINISH; */
 }
