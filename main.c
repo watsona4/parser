@@ -14,9 +14,10 @@ int main(int argc, char* argv[])
     sleep(1);
   }
 
-  /* while (Parser_NextArgs(&argc, &argv)) { */
-  /*   printf("Args (num = %d):", argc); */
-  /*   for (int i = 0; i < argc; ++i) */
-  /*     printf(" %s", argv[i]); */
-  /* } */
+  while (Parser_NextArgs(&argc, &argv)) {
+    printf("Args (num = %d):", argc);
+    for (int i = 0; i < argc; ++i)
+      printf(" %s", argv[i]);
+    printf("\n");
+   }
 }
