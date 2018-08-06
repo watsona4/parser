@@ -23,24 +23,21 @@ char* Parser_Next(int argc, char* argv[])
   static int i, state = 0;
 
   switch(state) {
-  case 0: goto parser_first_run;
-  case 1: goto parser_resume_from_yield;
+
+  case 0:;  // first run
+    for (i = 1; i < argc; ++i) {
+      if (state == 0 && argv[i][0] != '-') {
+        state = 1;
+        return argv[i];
+      } else if (SubcommandList_Contains(argv[i])) {
+        return argv[i];
+      }
+  case 1:;  // return from yield
+    }
+    state = -1;
   default:
     return NULL;
   }
-
- parser_first_run:
-  for (i = 1; i < argc; ++i) {
-    if (argv[i][0] != '-' && state == 0) {
-      state = 1;
-      return argv[i];
-    } else if (SubcommandList_Contains(argv[i])) {
-      return argv[i];
-    }
-    parser_resume_from_yield:;
-  }
-  state = -1;
-  return NULL;
 }
 
 int Parser_NextArgs(int* argc, char** argv[])

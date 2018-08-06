@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <unistd.h>
 
 #include "parser.h"
 
@@ -8,8 +9,10 @@ int NUM_COMMANDS = 3;
 int main(int argc, char* argv[])
 {
   char* arg;
-  while ((arg = Parser_Next(argc, argv)))
+  while ((arg = Parser_Next(argc, argv))) {
     printf("%s\n", arg);
+    sleep(1);
+  }
 
   /* while (Parser_NextArgs(&argc, &argv)) { */
   /*   printf("Args (num = %d):", argc); */
