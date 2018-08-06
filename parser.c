@@ -2,11 +2,6 @@
 
 #include <string.h>
 
-#define CR_BEGIN static int state=0; switch(state) { case 0:
-#define CR_RETURN(x) do { state=__LINE__; return x;	\
-    case __LINE__:; } while (0)
-#define CR_FINISH }
-
 extern char* COMMANDS[];
 extern int NUM_COMMANDS;
 
@@ -20,19 +15,21 @@ int SubcommandList_Contains(char const* name)
 
 char* Parser_Next(int argc, char* argv[])
 {
-  static int i, state = 0;
+  static int state = 0;
+  static char** ptr = NULL;
 
   switch(state) {
-
-  case 0:;  // first run
-    for (i = 1; i < argc; ++i) {
-      if (state == 0 && argv[i][0] != '-') {
+  case 0:  // first run
+    ptr = &argv[1];
+    while(*ptr) {
+      if (state == 0 && *ptr[0] != '-') {
         state = 1;
-        return argv[i];
-      } else if (SubcommandList_Contains(argv[i])) {
-        return argv[i];
+        return *ptr;
+      } else if (SubcommandList_Contains(*ptr)) {
+        return *ptr;
       }
-  case 1:;  // return from yield
+  case 1:  // return from yield
+    ++ptr;
     }
     state = -1;
   default:
