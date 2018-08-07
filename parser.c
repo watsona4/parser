@@ -24,7 +24,7 @@ char* Parser_Next(int argc, char* argv[])
    * state 1. (Assumes no args to executable that don't start with hyphen.)
    * Then return the argument (first subcommand). Upon reentry, state is 1.
    * In state 1, loop until the argument is in the list of subcommands. Once
-   * all arguments are evaluated, state is -1 and NULL is returned. This ia
+   * all arguments are evaluated, state is -1 and NULL is returned. This is
    * equivalent to the following Python code:
    *
    * state = 0
@@ -61,6 +61,17 @@ int Parser_NextArgs(int* argc, char** argv[])
 {
   static int state = 0;
   static char** ptr = NULL;
+
+  /* Loop over command-line, yielding the subcommand arguments. On entry,
+   * state is 0. In this case, advance until argument doesn't start with "-"
+   * and flip to state 1. (Assumes no args to executable that don't start
+   * with hyphen.) Then set return the number of arguments to the first
+   * subcommand. Upon reentry, state is 1. In state 1, set argv to ptr and
+   * advance ptr until the argument is in the list of subcommands; then
+   * return the number of arguments to that subcommand. Once all arguments
+   * are evaluated, state is -1 and NULL is returned. If "++" is encountered,
+   * skip the next argument.
+   */
 
   switch(state) {
   case 0:  // first run
