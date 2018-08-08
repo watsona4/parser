@@ -1,7 +1,0 @@
-#include "parser.h"
-
-int main(int argc, char* argv[])
-{
-  while ((arg = ParserNext(argc, argv)))
-    printf("%s\n", arg);
-}
